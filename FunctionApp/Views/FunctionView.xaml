@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="FunctionApp.Views.FunctionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FunctionApp.Views"
+             xmlns:viewmodels="clr-namespace:FunctionApp.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignWidth="600" 
+             d:DesignHeight="440" 
+             d:Background="White"
+             x:Name="FunctionControl">
+    <UserControl.DataContext>
+        <viewmodels:FunctionViewModel />
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ListBox ItemsSource="{Binding FunctionTypes}"
+                 SelectedItem="{Binding SelectedFunction}"
+                 DisplayMemberPath="Description"
+                 MaxWidth="{Binding ElementName=FunctionControl, Path=ActualWidth, Converter={StaticResource DivisionConverter}, ConverterParameter=2}" />
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <UniformGrid Columns="3">
+                <DockPanel>
+                    <TextBlock Text="a" />
+                    <TextBox Text="{Binding SelectedFunction.CoefficientA, UpdateSourceTrigger=PropertyChanged}" />
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="b" />
+                    <TextBox Text="{Binding SelectedFunction.CoefficientB, UpdateSourceTrigger=PropertyChanged}" />
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="c" />
+                    <ComboBox ItemsSource="{Binding SelectedFunction.CoefficientRangeC}"
+                              SelectedItem="{Binding SelectedFunction.CoefficientC, UpdateSourceTrigger=PropertyChanged}" />
+                </DockPanel>
+            </UniformGrid>
+            <DataGrid Grid.Row="1" ItemsSource="{Binding SelectedFunction.MathFunctionCalculations}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="f(x, y)" 
+                                        Width="*" 
+                                        IsReadOnly="True" 
+                                        Binding="{Binding Result}"/>
+                    <DataGridTextColumn Header="x" 
+                                        Width="*" 
+                                        Binding="{Binding X, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="y" 
+                                        Width="*" 
+                                        Binding="{Binding Y, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Grid.Row="2">
+                <Button Content="Добавить" 
+                        Command="{Binding SelectedFunction.AddFunctionCalculationCommand}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
